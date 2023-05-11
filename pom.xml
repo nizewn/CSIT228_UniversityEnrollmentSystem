@@ -12,12 +12,12 @@
         <exec.mainClass>com.groupone.universityenrollmentsystem.UniversityEnrollmentSystem</exec.mainClass>
     </properties>
 
-    <!--    <dependencies>
-         https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc -->
         <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
             <version>3.41.2.1</version>
         </dependency>
-    </dependencies>-->
+    </dependencies>
 </project>
