@@ -88,8 +88,12 @@ public class MainWindow extends JFrame implements ActionListener {
         navButtons = new ArrayList<NavButton>();
         for (String page : pageList) {
             NavButton btn = new NavButton(page, sidebarWidth);
-            navButtons.add(btn);
+            if (page == "Home") {
+                btn.setActive(true);
+            }
+
             btn.addActionListener(this);
+            navButtons.add(btn);
             sidebarPanel.add(btn);
         }
     }
