@@ -33,6 +33,7 @@ public class CoursesPage extends JPanel {
             {"G2", "Lady Gaga", "MWF 3-4 PM", "NGE-304", "Enroll"},
             {"G3", "Jane Doe", "TTH 2-4 PM", "GLE-202", "Enroll"},};
         JTable table = new JTable(data, columnNames);
+        table.setDefaultEditor(Object.class, null);
         table.setPreferredScrollableViewportSize(new Dimension(800, 100));
         JScrollPane scrollPane = new JScrollPane(table);
 

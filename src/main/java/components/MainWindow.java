@@ -102,10 +102,11 @@ public class MainWindow extends JFrame implements ActionListener {
         if (e.getSource() instanceof NavButton) {
             NavButton navBtn = (NavButton) e.getSource();
 
-            // set all other buttons to inactive
+            // set last active button to inactive
             for (NavButton b : navButtons) {
-                if (b.getActive() && b.getText() != navBtn.getText()) {
+                if (b.isActive() && b.getText() != navBtn.getText()) {
                     b.setActive(false);
+                    break;
                 }
             }
 

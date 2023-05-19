@@ -60,7 +60,7 @@ public class NavButton extends JButton implements MouseListener {
         this.active = active;
     }
 
-    public boolean getActive() {
+    public boolean isActive() {
         return this.active;
     }
 }

@@ -2,24 +2,29 @@ package entities;
 
 public class User {
 
-    private final String type; // student, instructor, admin, accountant?
+    private final String type; // student, instructor, or admin
 
     // di nalang tanan fields, ang uban kay iretrieve ra sa database
     // nya ioutput ra ditso, no need iapil sa user object
-    private String email,
+    private final int userId;
+    private int tuitionFee;
+    private String username,
+            email,
             lastName,
-            firstName,
-            idNumber;
+            firstName;
 
-    private int totalTuitionFee;
-    // iminus lang ni nato sa iya total payments para makuha ang remaining balance
-
-    public User(String type, String email, String lastName, String firstName, String idNumber) {
+    public User(int userId, String type, String username, String email, String lastName, String firstName, int tuitionFee) {
+        this.userId = userId;
         this.type = type;
+        this.username = username;
         this.email = email;
         this.lastName = lastName;
         this.firstName = firstName;
-        this.idNumber = idNumber;
+        this.tuitionFee = tuitionFee;
+    }
+
+    public int getUserId() {
+        return userId;
     }
 
     public String getType() {
@@ -50,19 +55,19 @@ public class User {
         this.firstName = firstName;
     }
 
-    public String getIdNumber() {
-        return idNumber;
+    public int getTuitionFee() {
+        return tuitionFee;
     }
 
-    public void setIdNumber(String idNumber) {
-        this.idNumber = idNumber;
+    public void setTuitionFee(int tuitionFee) {
+        this.tuitionFee = tuitionFee;
     }
 
-    public int getTotalTuitionFee() {
-        return totalTuitionFee;
+    public String getUsername() {
+        return username;
     }
 
-    public void setTotalTuitionFee(int totalTuitionFee) {
-        this.totalTuitionFee = totalTuitionFee;
+    public void setUsername(String username) {
+        this.username = username;
     }
 }
