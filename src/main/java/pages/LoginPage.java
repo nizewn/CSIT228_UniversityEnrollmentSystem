@@ -8,6 +8,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+// example rani
+import database.UserManager;
+import entities.User;
+
 public class LoginPage extends JPanel implements ActionListener {
 
     private JLabel userLabel, passwordLabel, messageLabel;
@@ -75,13 +79,20 @@ public class LoginPage extends JPanel implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == loginButton) {
-            String user = userTextField.getText();
+            String username = userTextField.getText();
             String password = new String(passwordField.getPassword());
 
-            if (user.equals("admin") && password.equals("12345")) {
+            UserManager manager = new UserManager();
+            User user = manager.loginUser(username, password);
+
+            if (user != null) {
                 messageLabel.setForeground(Color.GREEN);
                 messageLabel.setText("Login successful!");
+
+                // then ang user info kay nana diha sa user object
+                // ... ikaw na dayon bahala unsay buhaton if nakalogin na
             } else {
+                // if null ang user, edi failed
                 messageLabel.setForeground(Color.RED);
                 messageLabel.setText("Invalid username or password");
             }
