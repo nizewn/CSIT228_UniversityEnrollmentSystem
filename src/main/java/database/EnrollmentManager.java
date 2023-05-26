@@ -1,6 +1,7 @@
 package database;
 
 import entities.Enrollment;
+import utils.DatabaseManager;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

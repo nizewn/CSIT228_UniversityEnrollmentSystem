@@ -1,4 +1,4 @@
-package database;
+package utils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -18,7 +18,6 @@ public class DatabaseManager {
 
     private static DatabaseManager instance;
     private Connection connection;
-    private int userId = 0; // of current logged-in user
 
     private DatabaseManager() {
         System.out.println("Instantiating DatabaseManager. this should only print once");
@@ -33,8 +32,6 @@ public class DatabaseManager {
 
     public static synchronized DatabaseManager getInstance() {
         if (instance == null) {
-            // if wala patay instance, edi instantiate for the first time
-            // pero if naa nay instance daan, kato ra sya ireturn balik, no need maghimog lain
             instance = new DatabaseManager();
         }
         return instance;
@@ -42,13 +39,5 @@ public class DatabaseManager {
 
     public Connection getConnection() {
         return connection;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
     }
 }

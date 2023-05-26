@@ -4,13 +4,14 @@
  */
 package pages;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-
-// example rani
 import database.UserManager;
 import entities.User;
+import utils.UserState;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class LoginPage extends JPanel implements ActionListener {
 
@@ -89,10 +90,8 @@ public class LoginPage extends JPanel implements ActionListener {
                 messageLabel.setForeground(Color.GREEN);
                 messageLabel.setText("Login successful!");
 
-                // then ang user info kay nana diha sa user object
-                // ... ikaw na dayon bahala unsay buhaton if nakalogin na
+                UserState.getInstance().updateCurrentUser(user);
             } else {
-                // if null ang user, edi failed
                 messageLabel.setForeground(Color.RED);
                 messageLabel.setText("Invalid username or password");
             }

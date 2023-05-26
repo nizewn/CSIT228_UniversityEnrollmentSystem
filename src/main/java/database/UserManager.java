@@ -1,6 +1,7 @@
 package database;
 
 import entities.User;
+import utils.DatabaseManager;
 
 import java.sql.*;
 import java.util.ArrayList;
