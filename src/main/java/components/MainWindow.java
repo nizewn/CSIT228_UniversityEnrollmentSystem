@@ -1,32 +1,30 @@
 package components;
 
-import java.util.ArrayList;
-import java.awt.*;
-import javax.swing.*;
-import java.awt.event.*;
-
-// import all pages
 import pages.*;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class MainWindow extends JFrame implements ActionListener {
 
     private final int sidebarWidth = 150;
-
+    private final String[] pageList = {
+            "Home",
+            "Login",
+            "Register",
+            "Student Information",
+            "Schedule",
+            "Courses",
+            "Grades",
+            "Calendar",
+            "Announcements",
+            "Account Balance"
+    };
     private JPanel sidebarPanel, contentPanel;
     private CardLayout cardLayout;
-
-    private final String[] pageList = {
-        "Home",
-        "Login",
-        "Register",
-        "Student Information",
-        "Schedule",
-        "Courses",
-        "Grades",
-        "Calendar",
-        "Announcements",
-        "Account Balance"
-    };
     private ArrayList<NavButton> navButtons;
 
     public MainWindow() {
@@ -77,7 +75,7 @@ public class MainWindow extends JFrame implements ActionListener {
         sidebarPanel.setLayout(new BoxLayout(sidebarPanel, BoxLayout.Y_AXIS));
         sidebarPanel.setPreferredSize(new Dimension(sidebarWidth, 600));
 
-        JLabel topLabel = new JLabel("Welcome, butiki!");
+        JLabel topLabel = new JLabel("Welcome, butwiki!");
         topLabel.setOpaque(true);
         topLabel.setBackground(new Color(230, 230, 230));
         topLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -88,7 +86,7 @@ public class MainWindow extends JFrame implements ActionListener {
         navButtons = new ArrayList<NavButton>();
         for (String page : pageList) {
             NavButton btn = new NavButton(page, sidebarWidth);
-            if (page == "Home") {
+            if (page.equals("Home")) {
                 btn.setActive(true);
             }
 

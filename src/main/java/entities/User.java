@@ -2,20 +2,18 @@ package entities;
 
 public class User {
 
-    private final String type; // student, instructor, or admin
+    private final boolean admin;
 
-    // di nalang tanan fields, ang uban kay iretrieve ra sa database
-    // nya ioutput ra ditso, no need iapil sa user object
-    private final int userId;
+    private final int id;
     private int tuitionFee;
     private String username,
             email,
             lastName,
             firstName;
 
-    public User(int userId, String type, String username, String email, String lastName, String firstName, int tuitionFee) {
-        this.userId = userId;
-        this.type = type;
+    public User(int id, boolean admin, String username, String email, String lastName, String firstName, int tuitionFee) {
+        this.id = id;
+        this.admin = admin;
         this.username = username;
         this.email = email;
         this.lastName = lastName;
@@ -23,12 +21,12 @@ public class User {
         this.tuitionFee = tuitionFee;
     }
 
-    public int getUserId() {
-        return userId;
+    public int getId() {
+        return id;
     }
 
-    public String getType() {
-        return type;
+    public boolean isAdmin() {
+        return admin;
     }
 
     public String getEmail() {

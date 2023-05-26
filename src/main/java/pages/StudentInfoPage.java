@@ -7,56 +7,60 @@ public class StudentInfoPage extends JPanel {
 
     private FieldPanel lastNamePanel,
             firstNamePanel,
-            idNumberPanel,
-            programPanel,
-            yearPanel;
-    // pag add lang ^
+            emailPanel,
+            usernamePanel,
+            yearlevelPanel;
 
+    // pag add lang ^
     public StudentInfoPage() {
         super();
-        setLayout(new FlowLayout(1, 8, 10));
+        setLayout(new FlowLayout(FlowLayout.CENTER, 8, 10));
 
         int separatorCount = 3;
         JSeparator[] separators = new JSeparator[separatorCount];
         for (int i = 0; i < separatorCount; i++) {
             separators[i] = new JSeparator();
             separators[i].setOrientation(SwingConstants.HORIZONTAL);
-            separators[i].setPreferredSize(new Dimension(650, 8));
+            separators[i].setPreferredSize(new Dimension(650, 10));
             separators[i].setForeground(new Color(200, 200, 200));
             separators[i].setBackground(null);
         }
 
         lastNamePanel = new FieldPanel("Last name");
         add(lastNamePanel);
+
         firstNamePanel = new FieldPanel("First name");
         add(firstNamePanel);
 
-        idNumberPanel = new FieldPanel("ID Number");
-        idNumberPanel.setTextValue("123-test-456");
-        idNumberPanel.setEditable(false);
-        add(idNumberPanel);
+        yearlevelPanel = new FieldPanel("Year Level");
+        add(yearlevelPanel);
 
-        // separators para gray line
-        add(separators[0]);
+        usernamePanel = new FieldPanel("Username");
+        add(usernamePanel);
 
-        programPanel = new FieldPanel("Test");
-        add(programPanel);
+        emailPanel = new FieldPanel("Email");
+        add(emailPanel);
 
-        add(separators[1]);
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JButton saveButton = new JButton("Save");
+        JButton refreshButton = new JButton("Refresh");
+        buttonPanel.add(saveButton);
+        buttonPanel.add(refreshButton);
+        buttonPanel.setPreferredSize(new Dimension(500, getPreferredSize().height));
+        add(buttonPanel);
 
-        yearPanel = new FieldPanel("Test nasad");
-        yearPanel.setWidth(680); // para mogamit full width
-        add(yearPanel);
+    }
 
-        add(separators[2]);
-
-        // ^ examples rani, usba2 lang
-        // FieldPanel ray need icreate, sagol nana syag Label og TextField,
-        // nya add() ra ditso
+    public static void main(String[] args) {
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(400, 300);
+        frame.add(new StudentInfoPage());
+        frame.setVisible(true);
     }
 }
-
 // tanawa lang nya ni or pwede ka mag add2
+
 class FieldPanel extends JPanel {
 
     private JLabel label;
@@ -64,8 +68,8 @@ class FieldPanel extends JPanel {
 
     public FieldPanel(String labelName) {
         super(new BorderLayout());
-        label = new JLabel(" " + labelName);
-        textField = new JTextField(20);
+        label = new JLabel(labelName);
+        textField = new JTextField(50);
         add(label, BorderLayout.NORTH);
         add(textField, BorderLayout.SOUTH);
     }

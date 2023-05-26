@@ -1,14 +1,41 @@
 package pages;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 public class GradesPage extends JPanel {
 
+    private JComboBox<String> dropdown;
+    private JLabel label;
+    private JTable table;
+
     public GradesPage() {
         super();
+        setLayout(new BorderLayout());
 
-        // inyo code
-        JLabel example = new JLabel("Grade page here");
-        add(example);
+        // Dropdown menu
+        dropdown = new JComboBox<>(new String[]{"Option 1", "Option 2", "Option 3"});
+        JPanel dropdownPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        dropdownPanel.add(dropdown);
+        add(dropdownPanel, BorderLayout.NORTH);
+
+        // Label
+        label = new JLabel("This is a label");
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        add(label, BorderLayout.CENTER);
+
+        // Table
+        String[] columnNames = {"Column 1", "Column 2", "Column 3", "Column 4"};
+        Object[][] rowData = {
+            {"Row 1", "Data 1", "Data 2", "Data 3"},
+            {"Row 2", "Data 4", "Data 5", "Data 6"},
+            {"Row 3", "Data 7", "Data 8", "Data 9"}
+        };
+        DefaultTableModel tableModel = new DefaultTableModel(rowData, columnNames);
+        table = new JTable(tableModel);
+        JScrollPane scrollPane = new JScrollPane(table);
+        add(scrollPane, BorderLayout.SOUTH);
     }
 }

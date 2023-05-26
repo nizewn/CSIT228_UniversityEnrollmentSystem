@@ -1,71 +1,67 @@
 package database;
 
-import java.sql.Connection;
-import java.sql.Statement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import java.util.ArrayList;
-
 import entities.User;
+
+import java.sql.*;
+import java.util.ArrayList;
 
 public class UserManager {
 
-    private final DatabaseManager manager;
     private final Connection connection;
 
     public UserManager() {
-        manager = DatabaseManager.getInstance();
+        DatabaseManager manager = DatabaseManager.getInstance();
         connection = manager.getConnection();
     }
 
-    // int ang type kay userid iya ireturn, nya 0 ang ireturn if failed
-    public int createUser(String type, String username, String password, String lastName, String firstName,
-            char gender, String birthDate, String address, String contactNo, String email) {
+    public User createUser(boolean admin, String username, String password, String lastName, String firstName, String email) {
 
-        String sql = "INSERT INTO user (type, username, password, lastname, firstname, gender, birthdate, address, contactno, email) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING userid";
+        String sql = "INSERT INTO user (admin, username, password, lastname, firstname, email) "
+                + "VALUES (?, ?, ?, ?, ?, ?) RETURNING userid";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
 
-            statement.setString(1, type);
+            statement.setBoolean(1, admin);
             statement.setString(2, username);
             statement.setString(3, password);
             statement.setString(4, lastName);
             statement.setString(5, firstName);
-            statement.setString(6, String.valueOf(gender));
-            statement.setString(7, birthDate);
-            statement.setString(8, address);
-            statement.setString(9, contactNo);
-            statement.setString(10, email);
+            statement.setString(6, email);
 
             ResultSet result = statement.executeQuery();
 
             if (result.next()) {
-                return result.getInt("userid");
+                return new User(
+                        result.getInt("userid"),
+                        admin,
+                        username,
+                        email,
+                        lastName,
+                        firstName,
+                        0);
+
             } else {
-                return 0;
+                return null;
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            return 0;
+            return null;
         }
     }
 
     public ArrayList<User> getAllUsers() {
-        String sql = "SELECT * FROM users;";
+        String sql = "SELECT * FROM users";
         try {
             Statement statement = connection.createStatement();
 
             ResultSet result = statement.executeQuery(sql);
 
-            ArrayList userList = new ArrayList<User>();
+            ArrayList<User> userList = new ArrayList<User>();
 
             while (result.next()) {
                 User user = new User(
                         result.getInt("userid"),
-                        result.getString("type"),
+                        result.getBoolean("admin"),
                         result.getString("username"),
                         result.getString("email"),
                         result.getString("lastname"),
@@ -81,7 +77,7 @@ public class UserManager {
     }
 
     public User getUser(int userid) {
-        String sql = "SELECT * FROM users WHERE userid = ?;";
+        String sql = "SELECT * FROM users WHERE userid = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
 
@@ -90,15 +86,14 @@ public class UserManager {
             ResultSet result = statement.executeQuery(sql);
 
             if (result.next()) {
-                User user = new User(
+                return new User(
                         result.getInt("userid"),
-                        result.getString("type"),
+                        result.getBoolean("admin"),
                         result.getString("username"),
                         result.getString("email"),
                         result.getString("lastname"),
                         result.getString("firstname"),
                         result.getInt("tuitionfee"));
-                return user;
             } else {
                 return null;
             }
@@ -108,27 +103,25 @@ public class UserManager {
         }
     }
 
-    // if successful ang login, moreturn ang User, otherwise null ang ireturn
     public User loginUser(String username, String password) {
-        String sql = "SELECT * FROM users WHERE username = ? AND password = ?;";
+        String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
 
             statement.setString(1, username);
             statement.setString(2, password);
 
-            ResultSet result = statement.executeQuery(sql);
+            ResultSet result = statement.executeQuery();
 
             if (result.next()) {
-                User user = new User(
+                return new User(
                         result.getInt("userid"),
-                        result.getString("type"),
+                        result.getBoolean("admin"),
                         result.getString("username"),
                         result.getString("email"),
                         result.getString("lastname"),
                         result.getString("firstname"),
                         result.getInt("tuitionfee"));
-                return user;
             } else {
                 return null;
             }
@@ -137,6 +130,60 @@ public class UserManager {
             return null;
         }
     }
-    // TODO: update & delete(?) user
+
+    public boolean updateUser(User user) {
+        String sql = "UPDATE users SET admin = ?, username = ?, lastname = ?, firstname = ?, email = ?, tuitionfee = ? WHERE userid = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+
+            statement.setBoolean(1, user.isAdmin());
+            statement.setString(2, user.getUsername());
+            statement.setString(3, user.getLastName());
+            statement.setString(4, user.getFirstName());
+            statement.setString(5, user.getEmail());
+            statement.setInt(6, user.getTuitionFee());
+            statement.setInt(7, user.getId());
+
+            int result = statement.executeUpdate();
+
+            return result > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean updatePassword(int userId, String password) {
+        String sql = "UPDATE users SET password = ? WHERE userid = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+
+            statement.setString(1, password);
+            statement.setInt(2, userId);
+
+            int result = statement.executeUpdate();
+
+            return result > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteUser(int userid) {
+        String sql = "DELETE FROM users WHERE userid = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+
+            statement.setInt(1, userid);
+
+            int result = statement.executeUpdate();
+
+            return result > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
     // pwede sad mag add og searchUser gamit LIKE keyword sa sql, depende ninyo
 }

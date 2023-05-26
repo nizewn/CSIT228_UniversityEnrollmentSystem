@@ -1,10 +1,8 @@
 package pages;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import javax.swing.*;
 
 public class CoursesPage extends JPanel {
@@ -34,35 +32,13 @@ public class CoursesPage extends JPanel {
             {"G3", "Jane Doe", "TTH 2-4 PM", "GLE-202", "Enroll"},};
         JTable table = new JTable(data, columnNames);
         table.setDefaultEditor(Object.class, null);
-        table.setPreferredScrollableViewportSize(new Dimension(800, 100));
+        table.setPreferredScrollableViewportSize(new Dimension(800, 400));
         JScrollPane scrollPane = new JScrollPane(table);
 
-        // Add components to the window using GridBagLayout
-        GridBagLayout layout = new GridBagLayout();
-        setLayout(layout);
+        setLayout(new BorderLayout());
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
-
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        add(searchPanel, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.gridwidth = 1;
-        gbc.fill = GridBagConstraints.NONE;
-        add(resultsLabel, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.weightx = 1.0;
-        gbc.weighty = 0.5;
-        gbc.anchor = GridBagConstraints.CENTER;
-        add(scrollPane, gbc);
+        add(searchPanel, BorderLayout.NORTH);
+        add(resultsLabel, BorderLayout.CENTER);
+        add(scrollPane, BorderLayout.SOUTH);
     }
 }
