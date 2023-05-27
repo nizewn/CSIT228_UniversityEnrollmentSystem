@@ -31,12 +31,7 @@ public class GradesPage extends JPanel implements UserEventListener {
 
         // Table
         String[] columnNames = {"Column 1", "Column 2", "Column 3", "Column 4"};
-        Object[][] rowData = {
-                {"Row 1", "Data 1", "Data 2", "Data 3"},
-                {"Row 2", "Data 4", "Data 5", "Data 6"},
-                {"Row 3", "Data 7", "Data 8", "Data 9"}
-        };
-        DefaultTableModel tableModel = new DefaultTableModel(rowData, columnNames);
+        DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.SOUTH);
@@ -47,11 +42,25 @@ public class GradesPage extends JPanel implements UserEventListener {
     @Override
     public void onUserUpdate(User user) {
         if (user != null) {
-            refreshData();
+            //refreshData();
         }
     }
 
-    void refreshData() {
-        // TODO: code diri para moshow ang data sa table
-    }
+//    void refreshData() {
+//        int userId = UserState.getInstance().getCurrentUser().getId();
+//        EnrollmentManager enrollmentManager = new EnrollmentManager();
+//        ArrayList<Enrollment> enrollments = enrollmentManager.getAllEnrollmentsByUser(userId);
+//
+//        DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+//        tableModel.setRowCount(0);
+//        for(Enrollment enrollment : enrollments) {
+//            String[] data = {
+//                    enrollment.getSection().getCourse().getCode(),
+//                    enrollment.getSection().getCourse().getDescription(),
+//                    enrollment.getSection().getInstructorName(),
+//                    enrollment.
+//            };
+//            tableModel.addRow(data);
+//        }
+//    }
 }
