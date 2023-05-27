@@ -3,10 +3,7 @@ package database;
 import entities.Course;
 import utils.DatabaseManager;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class CourseManager {
@@ -19,20 +16,21 @@ public class CourseManager {
 
     public Course createCourse(String code, String description, int units, int tuition) {
         String sql = "INSERT INTO courses (code, description, units, tuition) "
-                + "VALUES (?, ?, ?, ?) RETURNING courseid";
+                + "VALUES (?, ?, ?, ?)";
         try {
-            PreparedStatement statement = connection.prepareStatement(sql);
+            PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             statement.setString(1, code);
             statement.setString(2, description);
             statement.setInt(3, units);
             statement.setInt(4, tuition);
 
-            ResultSet result = statement.executeQuery();
+            statement.executeUpdate();
+            ResultSet result = statement.getGeneratedKeys();
 
             if (result.next()) {
                 return new Course(
-                        result.getInt("courseid"),
+                        result.getInt(1),
                         code,
                         description,
                         units,

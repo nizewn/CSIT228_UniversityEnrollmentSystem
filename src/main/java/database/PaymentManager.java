@@ -3,10 +3,7 @@ package database;
 import entities.Payment;
 import utils.DatabaseManager;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Date;
 
 public class PaymentManager {
@@ -20,21 +17,22 @@ public class PaymentManager {
 
     public Payment createPayment(int userId, int adminId, int amount, Date date) {
         String sql = "INSERT INTO payments (userid, adminid, amount, date) "
-                + "VALUES (?, ?, ?, ?) RETURNING paymentid";
+                + "VALUES (?, ?, ?, ?)";
         try {
-            PreparedStatement statement = connection.prepareStatement(sql);
+            PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             statement.setInt(1, userId);
             statement.setInt(2, adminId);
             statement.setInt(3, amount);
             statement.setTimestamp(4, new java.sql.Timestamp(date.getTime()));
 
-            ResultSet result = statement.executeQuery();
+            statement.executeUpdate();
+            ResultSet result = statement.getGeneratedKeys();
 
             if (result.next()) {
                 UserManager userManager = new UserManager();
                 return new Payment(
-                        result.getInt("paymentid"),
+                        result.getInt(1),
                         amount,
                         date,
                         userManager.getUser(userId),

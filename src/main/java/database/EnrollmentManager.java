@@ -3,10 +3,7 @@ package database;
 import entities.Enrollment;
 import utils.DatabaseManager;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class EnrollmentManager {
@@ -19,22 +16,23 @@ public class EnrollmentManager {
 
     public Enrollment createEnrollment(int userId, int sectionId, double midtermGrade, double finalGrade) {
         String sql = "INSERT INTO enrollments (userid, sectionid, midtermgrade, finalgrade) "
-                + "VALUES (?, ?, ?, ?) RETURNING enrollmentid";
+                + "VALUES (?, ?, ?, ?)";
         try {
-            PreparedStatement statement = connection.prepareStatement(sql);
+            PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             statement.setInt(1, userId);
             statement.setInt(2, sectionId);
             statement.setDouble(3, midtermGrade);
             statement.setDouble(4, finalGrade);
 
-            ResultSet result = statement.executeQuery();
+            statement.executeUpdate();
+            ResultSet result = statement.getGeneratedKeys();
 
             if (result.next()) {
                 UserManager userManager = new UserManager();
                 SectionManager sectionManager = new SectionManager();
                 return new Enrollment(
-                        result.getInt("enrollmentid"),
+                        result.getInt(1),
                         userManager.getUser(userId),
                         sectionManager.getSection(sectionId),
                         midtermGrade,

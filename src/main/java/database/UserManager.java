@@ -17,10 +17,10 @@ public class UserManager {
 
     public User createUser(boolean admin, String username, String password, String lastName, String firstName, String email) {
 
-        String sql = "INSERT INTO user (admin, username, password, lastname, firstname, email) "
-                + "VALUES (?, ?, ?, ?, ?, ?) RETURNING userid";
+        String sql = "INSERT INTO users (admin, username, password, lastname, firstname, email) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
         try {
-            PreparedStatement statement = connection.prepareStatement(sql);
+            PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             statement.setBoolean(1, admin);
             statement.setString(2, username);
@@ -29,11 +29,12 @@ public class UserManager {
             statement.setString(5, firstName);
             statement.setString(6, email);
 
-            ResultSet result = statement.executeQuery();
+            statement.executeUpdate();
+            ResultSet result = statement.getGeneratedKeys();
 
             if (result.next()) {
                 return new User(
-                        result.getInt("userid"),
+                        result.getInt(1),
                         admin,
                         username,
                         email,

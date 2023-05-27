@@ -17,20 +17,21 @@ public class AnnouncementManager {
 
     public Announcement createAnnouncement(int adminId, Date date, String message) {
         String sql = "INSERT INTO announcements (adminid, date, message) "
-                + "VALUES (?, ?, ?) RETURNING announcementid";
+                + "VALUES (?, ?, ?)";
         try {
-            PreparedStatement statement = connection.prepareStatement(sql);
+            PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             statement.setInt(1, adminId);
             statement.setTimestamp(2, new Timestamp(date.getTime()));
             statement.setString(3, message);
 
-            ResultSet result = statement.executeQuery();
+            statement.executeUpdate();
+            ResultSet result = statement.getGeneratedKeys();
 
             if (result.next()) {
                 UserManager userManager = new UserManager();
                 return new Announcement(
-                        result.getInt("announcementid"),
+                        result.getInt(1),
                         userManager.getUser(adminId),
                         date,
                         message);

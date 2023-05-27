@@ -22,9 +22,7 @@ public class DatabaseManager {
     private DatabaseManager() {
         System.out.println("Instantiating DatabaseManager. this should only print once");
         try {
-            // Establish the database connection
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/oop2", "root", "");
-
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/g2group1", "root", "");
         } catch (SQLException e) {
             e.printStackTrace();
         }

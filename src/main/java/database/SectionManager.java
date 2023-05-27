@@ -16,9 +16,9 @@ public class SectionManager {
 
     public Section createSection(int courseId, String instructorName, String location, String days, Time timeStart, Time timeEnd, int semester) {
         String sql = "INSERT INTO sections (courseid, instructorname, location, days, timestart, timeend, semester) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING sectionid";
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
-            PreparedStatement statement = connection.prepareStatement(sql);
+            PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             statement.setInt(1, courseId);
             statement.setString(2, instructorName);
@@ -28,12 +28,13 @@ public class SectionManager {
             statement.setTime(6, timeEnd);
             statement.setInt(7, semester);
 
-            ResultSet result = statement.executeQuery();
+            statement.executeUpdate();
+            ResultSet result = statement.getGeneratedKeys();
 
             if (result.next()) {
                 CourseManager courseManager = new CourseManager();
                 return new Section(
-                        result.getInt("sectionid"),
+                        result.getInt(1),
                         courseManager.getCourse(courseId),
                         instructorName,
                         location,
