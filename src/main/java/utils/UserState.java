@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class UserState {
     private static UserState instance;
 
-    private ArrayList<UserEventListener> listeners = new ArrayList<>();
+    private final ArrayList<UserEventListener> listeners = new ArrayList<>();
     private User currentUser;
 
     private UserState() {
