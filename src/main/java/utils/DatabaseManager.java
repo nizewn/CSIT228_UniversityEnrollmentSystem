@@ -20,7 +20,7 @@ public class DatabaseManager {
     private Connection connection;
 
     private DatabaseManager() {
-        System.out.println("Instantiating DatabaseManager. this should only print once");
+        System.out.println("Instantiating DatabaseManager singleton. this should only print once");
         try {
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/g2group1", "root", "");
         } catch (SQLException e) {

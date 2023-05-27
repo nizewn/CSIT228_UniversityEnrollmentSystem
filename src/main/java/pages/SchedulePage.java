@@ -76,7 +76,9 @@ public class SchedulePage extends JPanel implements UserEventListener {
 
     @Override
     public void onUserUpdate(User user) {
-        refreshData();
+        if (user != null) {
+            refreshData();
+        }
     }
 
     void refreshData() {
