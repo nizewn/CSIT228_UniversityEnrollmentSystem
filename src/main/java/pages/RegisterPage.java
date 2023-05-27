@@ -1,263 +1,120 @@
 package pages;
 
+import database.UserManager;
+import entities.User;
+import utils.UserState;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.io.File;
-import java.util.Arrays;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class RegisterPage extends JPanel implements ActionListener {
 
-    private JLabel titleLabel, personalInfoLabel, loginInfoLabel, profileImageLabel;
-    private JTextField firstNameTextField, lastNameTextField, dobTextField, addressTextField, contactTextField, emailTextField, usernameTextField;
-    private JPasswordField passwordField, confirmField;
-    private JButton selectImageButton, submitButton;
-    private JComboBox<String> genderComboBox;
+    private JTextField lastNameField, firstNameField, emailField;
+    private JPasswordField passwordField, confirmPasswordField;
+    private JLabel personalInfoLabel, loginInfoLabel;
+    private JButton submitButton, resetButton;
 
     public RegisterPage() {
         super();
+        setLayout(new FlowLayout(FlowLayout.CENTER, 8, 10));
 
-        setLayout(new GridBagLayout());
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.insets = new Insets(10, 10, 10, 10);
+        int separatorCount = 3;
+        JSeparator[] separators = new JSeparator[separatorCount];
+        for (int i = 0; i < separatorCount; i++) {
+            separators[i] = new JSeparator();
+            separators[i].setOrientation(SwingConstants.HORIZONTAL);
+            separators[i].setPreferredSize(new Dimension(650, 10));
+            separators[i].setForeground(new Color(200, 200, 200));
+            separators[i].setBackground(null);
+        }
 
-        // add the title label
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.gridwidth = 6;
-        titleLabel = new JLabel("STUDENT REGISTRATION FORM");
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        add(titleLabel, constraints);
+        JLabel titleLabel = new JLabel("STUDENT REGISTRATION FORM");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        add(titleLabel);
+        add(separators[0]);
 
-        //personal information label and components
-        constraints.gridx = 0;
-        constraints.gridy = 1;
-        constraints.gridwidth = 1;
-        constraints.anchor = GridBagConstraints.WEST;
-        personalInfoLabel = new JLabel("PERSONAL INFORMATION");
-        personalInfoLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        add(personalInfoLabel, constraints);
+        personalInfoLabel = new JLabel("Personal Information");
+        personalInfoLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        add(personalInfoLabel);
 
-        constraints.gridx = 0;
-        constraints.gridy = 2;
-        constraints.anchor = GridBagConstraints.WEST;
-        JLabel firstNameLabel = new JLabel("First Name:");
-        add(firstNameLabel, constraints);
+        lastNameField = new JTextField(20);
+        addFieldPanel("Last name", lastNameField);
 
-        constraints.gridx = 1;
-        constraints.gridy = 2;
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        firstNameTextField = new JTextField(20);
-        add(firstNameTextField, constraints);
+        firstNameField = new JTextField(20);
+        addFieldPanel("First name", firstNameField);
 
-        constraints.gridx = 0;
-        constraints.gridy = 3;
-        JLabel lastNameLabel = new JLabel("Last Name:");
-        add(lastNameLabel, constraints);
+        emailField = new JTextField(20);
+        addFieldPanel("Email Address", emailField);
 
-        constraints.gridx = 1;
-        constraints.gridy = 3;
-        lastNameTextField = new JTextField(20);
-        add(lastNameTextField, constraints);
+        loginInfoLabel = new JLabel("Login Information");
+        loginInfoLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        add(loginInfoLabel);
 
-        constraints.gridx = 0;
-        constraints.gridy = 4;
-        JLabel genderLabel = new JLabel("Gender:");
-        add(genderLabel, constraints);
+        emailField = new JTextField(20);
+        addFieldPanel("Email Address", emailField);
 
-        constraints.gridx = 1;
-        constraints.gridy = 4;
-        String[] genderOptions = {"Male", "Female", "Other"};
-        genderComboBox = new JComboBox<>(genderOptions);
-        add(genderComboBox, constraints);
-
-        constraints.gridx = 0;
-        constraints.gridy = 5;
-        JLabel dobLabel = new JLabel("Date of Birth:");
-        add(dobLabel, constraints);
-
-        constraints.gridx = 1;
-        constraints.gridy = 5;
-        dobTextField = new JTextField(20);
-        add(dobTextField, constraints);
-
-        constraints.gridx = 0;
-        constraints.gridy = 6;
-        JLabel addressLabel = new JLabel("Address:");
-        add(addressLabel, constraints);
-
-        constraints.gridx = 1;
-        constraints.gridy = 6;
-        addressTextField = new JTextField(20);
-        add(addressTextField, constraints);
-
-        constraints.gridx = 0;
-        constraints.gridy = 7;
-        JLabel contactLabel = new JLabel("Contact Number:");
-        add(contactLabel, constraints);
-
-        constraints.gridx = 1;
-        constraints.gridy = 7;
-        contactTextField = new JTextField(20);
-
-        add(contactTextField, constraints);
-
-        constraints.gridx = 0;
-        constraints.gridy = 8;
-        JLabel emailLabel = new JLabel("Email Address:");
-        add(emailLabel, constraints);
-
-        constraints.gridx = 1;
-        constraints.gridy = 8;
-        emailTextField = new JTextField(20);
-        add(emailTextField, constraints);
-
-        // login information label and components
-        constraints.gridx = 2;
-        constraints.gridy = 1;
-        constraints.anchor = GridBagConstraints.WEST;
-        loginInfoLabel = new JLabel("LOGIN INFORMATION");
-        loginInfoLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        add(loginInfoLabel, constraints);
-
-        constraints.gridx = 2;
-        constraints.gridy = 2;
-        constraints.anchor = GridBagConstraints.EAST;
-        JLabel usernameLabel = new JLabel("Username:");
-        add(usernameLabel, constraints);
-
-        constraints.gridx = 3;
-        constraints.gridy = 2;
-        constraints.fill = GridBagConstraints.HORIZONTAL;
-        usernameTextField = new JTextField(20);
-        add(usernameTextField, constraints);
-
-        constraints.gridx = 2;
-        constraints.gridy = 3;
-        JLabel passwordLabel = new JLabel("Password:");
-        add(passwordLabel, constraints);
-
-        constraints.gridx = 3;
-        constraints.gridy = 3;
         passwordField = new JPasswordField(20);
-        add(passwordField, constraints);
+        addFieldPanel("Password", passwordField);
 
-        constraints.gridx = 2;
-        constraints.gridy = 4;
-        JLabel confirmLabel = new JLabel("Confirm Password:");
-        add(confirmLabel, constraints);
+        confirmPasswordField = new JPasswordField(20);
+        addFieldPanel("Confirm Password", confirmPasswordField);
 
-        constraints.gridx = 3;
-        constraints.gridy = 4;
-        confirmField = new JPasswordField(20);
-        add(confirmField, constraints);
-
-        //profile image
-        constraints.gridx = 2;
-        constraints.gridy = 5;
-        JLabel profileImage = new JLabel("PROFILE IMAGE");
-        loginInfoLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        add(profileImage, constraints);
-
-        //wapa nko na tarung ari, di pa madisplay ang image sdskdk
-        constraints.gridx = 3;
-        constraints.gridy = 5;
-        constraints.gridheight = 6;
-        selectImageButton = new JButton("Select Image");
-        selectImageButton.setPreferredSize(new Dimension(100, 100));
-        selectImageButton.addActionListener(this);
-        add(selectImageButton, constraints);
-
-        constraints.gridx = 3;
-        constraints.gridy = 6;
-        profileImageLabel = new JLabel();
-        add(profileImageLabel, constraints);
-
-        //sumbit and clear buttons
-        JPanel buttonPanel = new JPanel();
-        submitButton = new JButton("Submit");
-        submitButton.addActionListener(this);
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        submitButton = new JButton("Save");
+        resetButton = new JButton("Clear");
         buttonPanel.add(submitButton);
+        buttonPanel.add(resetButton);
+        buttonPanel.setPreferredSize(new Dimension(500, getPreferredSize().height));
+        add(buttonPanel);
 
-        JButton cancelButton = new JButton("Clear");
-        cancelButton.addActionListener(this);
-        buttonPanel.add(cancelButton);
-
-        constraints.gridx = 0;
-        constraints.gridy = 14;
-        constraints.gridwidth = 6;
-        add(buttonPanel, constraints);
+        // Add action listeners
+        submitButton.addActionListener(this);
+        resetButton.addActionListener(this);
     }
 
-    public void actionPerformed(ActionEvent e) {
-        Object cancelButton = null;
-        if (e.getSource() == selectImageButton) {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.showOpenDialog(null);
-            File file = fileChooser.getSelectedFile();
-            profileImageLabel.setText(file.getName());
-        } else if (e.getSource() == submitButton) {
-            String firstName = firstNameTextField.getText();
-            String lastName = lastNameTextField.getText();
-            String dob = dobTextField.getText();
-            String address = addressTextField.getText();
-            String contact = contactTextField.getText();
-            String email = emailTextField.getText();
-            String username = usernameTextField.getText();
-            String password = new String(passwordField.getPassword());
-            String confirm = new String(confirmField.getPassword());
+    private void addFieldPanel(String label, JComponent component) {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JLabel fieldLabel = new JLabel(label);
+        panel.add(fieldLabel);
+        panel.add(component);
+        add(panel);
+    }
 
-            if (firstName.isEmpty() || lastName.isEmpty() || dob.isEmpty() || address.isEmpty() || contact.isEmpty() || email.isEmpty() || username.isEmpty() || password.isEmpty() || confirm.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Please fill out all fields");
-            } else if (!Arrays.equals(passwordField.getPassword(), confirmField.getPassword())) {
-                JOptionPane.showMessageDialog(null, "Passwords do not match");
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
+        if (e.getSource() == submitButton) {
+            String lastName = lastNameField.getText();
+            String firstName = firstNameField.getText();
+            String email = emailField.getText();
+            String password = new String(passwordField.getPassword());
+            String confirmPassword = new String(confirmPasswordField.getPassword());
+
+            UserManager manager = new UserManager();
+            User user = manager.createUser(false, email, password, lastName, firstName, email);
+
+            //boolean success = userManager.updateUser(user);
+            if (user != null) {
+
+                JOptionPane.showMessageDialog(this, "Registration successful!");
+
+                UserState.getInstance().updateCurrentUser(user);
+
+                // Display a success message to the user or perform any other necessary actions
+                JOptionPane.showMessageDialog(this, "Registration successful!");
             } else {
-                JOptionPane.showMessageDialog(null, "Registration Successful");
+                // Display an error message or perform any other necessary actions
+                JOptionPane.showMessageDialog(this, "Registration failed. Please try again.");
             }
-        } else if (e.getSource() == cancelButton) {
-            firstNameTextField.setText("");
-            lastNameTextField.setText("");
-            genderComboBox.setSelectedIndex(0);
-            dobTextField.setText("");
-            addressTextField.setText("");
-            contactTextField.setText("");
-            emailTextField.setText("");
-            usernameTextField.setText("");
+        } else if (e.getSource() == resetButton) {
+            // Clear all input fields
+            lastNameField.setText("");
+            firstNameField.setText("");
+            emailField.setText("");
             passwordField.setText("");
-            confirmField.setText("");
+            confirmPasswordField.setText("");
         }
     }
 }
-
-// katong wala gigamit
-/*
-public void actionPerformed(ActionEvent e) {
-        Object cancelButton = null;
-    if (e.getSource() == selectImageButton) {
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.showOpenDialog(null);
-        File file = fileChooser.getSelectedFile();
-        profileImageLabel.setText(file.getName());
-    } else if (e.getSource() == submitButton) {
-        String firstName = firstNameTextField.getText();
-        String lastName = lastNameTextField.getText();
-        String dob = dobTextField.getText();
-        String address = addressTextField.getText();
-        String contact = contactTextField.getText();
-        String email = emailTextField.getText();
-        String username = usernameTextField.getText();
-        String password = new String(passwordField.getPassword());
-        String confirm = new String(confirmField.getPassword());
-
-        if (firstName.isEmpty() || lastName.isEmpty() || dob.isEmpty() || address.isEmpty() || contact.isEmpty() || email.isEmpty() || username.isEmpty() || password.isEmpty() || confirm.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Please fill out all fields");
-        } else if (!Arrays.equals(passwordField.getPassword(), confirmField.getPassword())) {
-            JOptionPane.showMessageDialog(null, "Passwords do not match");
-        } else {
-            JOptionPane.showMessageDialog(null, "Registration Successful");
-        }
-    } else if (e.getSource() == cancelButton) {
-        System.exit(0);
-
-    }
-} */

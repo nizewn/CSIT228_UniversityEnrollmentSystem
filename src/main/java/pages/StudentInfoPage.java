@@ -1,9 +1,13 @@
 package pages;
 
-import java.awt.*;
-import javax.swing.*;
+import entities.User;
+import utils.UserEventListener;
+import utils.UserState;
 
-public class StudentInfoPage extends JPanel {
+import javax.swing.*;
+import java.awt.*;
+
+public class StudentInfoPage extends JPanel implements UserEventListener {
 
     private FieldPanel lastNamePanel,
             firstNamePanel,
@@ -49,17 +53,18 @@ public class StudentInfoPage extends JPanel {
         buttonPanel.setPreferredSize(new Dimension(500, getPreferredSize().height));
         add(buttonPanel);
 
+        UserState.getInstance().addListener(this); // necessary ni para mogana ang onUserUpdate
     }
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 300);
-        frame.add(new StudentInfoPage());
-        frame.setVisible(true);
+    @Override
+    public void onUserUpdate(User user) {
+        refreshData();
+    }
+
+    void refreshData() {
+        // TODO: code diri para maupdate ang data sa text fields
     }
 }
-// tanawa lang nya ni or pwede ka mag add2
 
 class FieldPanel extends JPanel {
 

@@ -27,6 +27,7 @@ public class MainWindow extends JFrame implements ActionListener, UserEventListe
             "Account Balance"
     };
     private JPanel sidebarPanel, contentPanel;
+    private NavButton logoutButton;
     private CardLayout cardLayout;
     private ArrayList<NavButton> navButtons;
     private JLabel topLabel;
@@ -95,14 +96,27 @@ public class MainWindow extends JFrame implements ActionListener, UserEventListe
             if (page.equals("Home")) {
                 btn.setActive(true);
             }
+            if (!page.equals("Login") && !page.equals("Register") && !page.equals("Home")) {
+                btn.setVisible(false);
+            }
 
             btn.addActionListener(this);
             navButtons.add(btn);
             sidebarPanel.add(btn);
         }
+
+        logoutButton = new NavButton("Logout", sidebarWidth);
+        logoutButton.addActionListener(this);
+        logoutButton.setVisible(false);
+        sidebarPanel.add(logoutButton);
     }
 
     public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == logoutButton) {
+            UserState.getInstance().updateCurrentUser(null);
+            return;
+        }
+
         if (e.getSource() instanceof NavButton navBtn) {
             switchTab(navBtn.getText());
         }
@@ -125,18 +139,20 @@ public class MainWindow extends JFrame implements ActionListener, UserEventListe
     public void onUserUpdate(User user) {
         // update sidebar
         for (NavButton b : navButtons) {
-            if (b.getText().equals("Login") || b.getText().equals("Register")) {
+            if (b.getText().equals("Login") || b.getText().equals("Register") || b.getText().equals("Home")) {
                 b.setVisible(user == null);
             } else {
                 b.setVisible(user != null);
             }
         }
+        logoutButton.setVisible(user != null);
         // update top label
         if (user == null) {
             topLabel.setText("Welcome, guest!");
+            switchTab("Home");
         } else {
             topLabel.setText("Welcome, " + user.getUsername() + "!");
-            switchTab("Home");
+            switchTab("Schedule");
         }
     }
 }

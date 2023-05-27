@@ -1,9 +1,13 @@
 package pages;
 
-import java.awt.*;
-import javax.swing.*;
+import entities.User;
+import utils.UserEventListener;
+import utils.UserState;
 
-public class AccountBalancePage extends JPanel {
+import javax.swing.*;
+import java.awt.*;
+
+public class AccountBalancePage extends JPanel implements UserEventListener {
 
     public AccountBalancePage() {
         super();
@@ -16,43 +20,54 @@ public class AccountBalancePage extends JPanel {
 
         String[] columnNames = {"Semester", "Year Level", "School Year", "Date", "Payment", "Balance"};
         Object[][] data = {
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},
-            {"            ", "             ", "             ", "             ", "             ", "             "},};
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},
+                {"            ", "             ", "             ", "             ", "             ", "             "},};
         JTable table = new JTable(data, columnNames);
         table.setPreferredScrollableViewportSize(new Dimension(500, 250));
         table.setFillsViewportHeight(true);
         JScrollPane scrollPane = new JScrollPane(table);
 
         add(scrollPane, BorderLayout.CENTER);
+
+        UserState.getInstance().addListener(this); // necessary ni para mogana ang onUserUpdate
+    }
+
+    @Override
+    public void onUserUpdate(User user) {
+        refreshData();
+    }
+
+    void refreshData() {
+        // TODO: code diri para moshow ang data sa table
     }
 }

@@ -1,19 +1,26 @@
 package pages;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
+import database.EnrollmentManager;
+import entities.Enrollment;
+import entities.Section;
+import entities.User;
+import utils.UserEventListener;
+import utils.UserState;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import java.awt.*;
+import java.util.ArrayList;
 
-public class SchedulePage extends JPanel {
+public class SchedulePage extends JPanel implements UserEventListener {
 
     private JTable table;
 
     public SchedulePage() {
         super();
+
         setLayout(new BorderLayout());
 
         // Create the label panel and add labels to it
@@ -35,13 +42,7 @@ public class SchedulePage extends JPanel {
         // Create the table panel and add the table to it
         JPanel tablePanel = new JPanel(new GridLayout(1, 1));
         String[] columnNames = {"Faculty", "Course Code", "Description", "Section - Schedule - Room"};
-        Object[][] rowData = {
-            {"Faculty 1", "Code 1", "Description 1", "G2-MWF-GLE"},
-            {"Faculty 2", "Code 2", "Description 2", "G2-MWF-GLE"},
-            {"Faculty 3", "Code 3", "Description 3", "G2-MWF-GLE"},
-            {"Faculty 4", "Code 4", "Description 4", "G2-MWF-GLE"},
-            {"Faculty 5", "Code 5", "Description 5", "G2-MWF-GLE"},};
-        DefaultTableModel tableModel = new DefaultTableModel(rowData, columnNames);
+        DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
         table = new JTable(tableModel);
         int tableWidth = table.getPreferredSize().width;
         int numOfColumns = table.getColumnCount();
@@ -67,21 +68,38 @@ public class SchedulePage extends JPanel {
 
         // Add an action listener for the refresh button
         refreshButton.addActionListener(e -> {
-            // Perform refresh action here
-            // For example, update the table data with new values
-            DefaultTableModel model = (DefaultTableModel) table.getModel();
-            model.setRowCount(0); // Clear existing rows
-
-            // Add new data to the table
-            Object[][] newData = {
-                {"Faculty 6", "Code 6", "Description 6", "G2-MWF-GLE"},
-                {"Faculty 7", "Code 7", "Description 7", "G2-MWF-GLE"},
-                {"Faculty 8", "Code 8", "Description 8", "G2-MWF-GLE"},};
-            for (Object[] row : newData) {
-                model.addRow(row);
-            }
+            refreshData();
         });
+
+        UserState.getInstance().addListener(this); // necessary ni para mogana ang onUserUpdate
     }
+
+    @Override
+    public void onUserUpdate(User user) {
+        refreshData();
+    }
+
+    void refreshData() {
+        int currentUserId = UserState.getInstance().getCurrentUser().getId();
+        EnrollmentManager eManager = new EnrollmentManager();
+        ArrayList<Enrollment> enrollments = eManager.getAllEnrollmentsByUser(currentUserId);
+
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+
+        model.setNumRows(0);
+        for (Enrollment e : enrollments) {
+            Section section = e.getSection();
+
+            String[] data = {
+                    section.getInstructorName(),
+                    section.getCourse().getCode(),
+                    section.getCourse().getDescription(),
+                    section.getId() + " - " + section.getDays() + " - " + section.getLocation()
+            };
+            model.addRow(data);
+        }
+    }
+
 
     private class JPanelHeaderRenderer implements javax.swing.table.TableCellRenderer {
 

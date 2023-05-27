@@ -85,7 +85,7 @@ public class UserManager {
 
             statement.setInt(1, userid);
 
-            ResultSet result = statement.executeQuery(sql);
+            ResultSet result = statement.executeQuery();
 
             if (result.next()) {
                 return new User(
