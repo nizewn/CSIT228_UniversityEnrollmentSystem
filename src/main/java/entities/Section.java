@@ -1,5 +1,7 @@
 package entities;
 
+import java.sql.Time;
+
 public class Section {
 
     private final int id;
@@ -7,12 +9,12 @@ public class Section {
     private Course course;
     private String instructorName,
             location,
-            days, // MWF/TTH
-            timeStart,
+            days; // MWF/TTH
+    private Time timeStart,
             timeEnd;
     private int semester;
 
-    public Section(int id, Course course, String instructorName, String location, String days, String timeStart, String timeEnd, int semester) {
+    public Section(int id, Course course, String instructorName, String location, String days, Time timeStart, Time timeEnd, int semester) {
         this.id = id;
         this.course = course;
         this.instructorName = instructorName;
@@ -59,19 +61,19 @@ public class Section {
         this.days = days;
     }
 
-    public String getTimeStart() {
+    public Time getTimeStart() {
         return timeStart;
     }
 
-    public void setTimeStart(String timeStart) {
+    public void setTimeStart(Time timeStart) {
         this.timeStart = timeStart;
     }
 
-    public String getTimeEnd() {
+    public Time getTimeEnd() {
         return timeEnd;
     }
 
-    public void setTimeEnd(String timeEnd) {
+    public void setTimeEnd(Time timeEnd) {
         this.timeEnd = timeEnd;
     }
 

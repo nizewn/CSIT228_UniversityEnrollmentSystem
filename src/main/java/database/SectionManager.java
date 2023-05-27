@@ -3,10 +3,7 @@ package database;
 import entities.Section;
 import utils.DatabaseManager;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class SectionManager {
@@ -17,7 +14,7 @@ public class SectionManager {
         connection = manager.getConnection();
     }
 
-    public Section createSection(int courseId, String instructorName, String location, String days, String timeStart, String timeEnd, int semester) {
+    public Section createSection(int courseId, String instructorName, String location, String days, Time timeStart, Time timeEnd, int semester) {
         String sql = "INSERT INTO sections (courseid, instructorname, location, days, timestart, timeend, semester) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING sectionid";
         try {
@@ -27,8 +24,8 @@ public class SectionManager {
             statement.setString(2, instructorName);
             statement.setString(3, location);
             statement.setString(4, days);
-            statement.setString(5, timeStart);
-            statement.setString(6, timeEnd);
+            statement.setTime(5, timeStart);
+            statement.setTime(6, timeEnd);
             statement.setInt(7, semester);
 
             ResultSet result = statement.executeQuery();
@@ -67,8 +64,8 @@ public class SectionManager {
                         result.getString("instructorname"),
                         result.getString("location"),
                         result.getString("days"),
-                        result.getString("timestart"),
-                        result.getString("timeend"),
+                        result.getTime("timestart"),
+                        result.getTime("timeend"),
                         result.getInt("semester"));
             } else {
                 return null;
@@ -95,8 +92,8 @@ public class SectionManager {
                         result.getString("instructorname"),
                         result.getString("location"),
                         result.getString("days"),
-                        result.getString("timestart"),
-                        result.getString("timeend"),
+                        result.getTime("timestart"),
+                        result.getTime("timeend"),
                         result.getInt("semester")));
             }
             return sections;
@@ -114,8 +111,8 @@ public class SectionManager {
             statement.setString(2, section.getInstructorName());
             statement.setString(3, section.getLocation());
             statement.setString(4, section.getDays());
-            statement.setString(5, section.getTimeStart());
-            statement.setString(6, section.getTimeEnd());
+            statement.setTime(5, section.getTimeStart());
+            statement.setTime(6, section.getTimeEnd());
             statement.setInt(7, section.getSemester());
             statement.setInt(8, section.getId());
 
