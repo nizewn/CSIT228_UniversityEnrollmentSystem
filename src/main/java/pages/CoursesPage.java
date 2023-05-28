@@ -69,7 +69,7 @@ public class CoursesPage extends JPanel {
 
         // Create the table
         String[] columnNames = {"Section", "Description", "Instructor", "Schedule", "Room #"};
-        table = new JTable(new DefaultTableModel(null, columnNames));
+        table = new JTable(new DefaultTableModel(columnNames, 0));
         table.setDefaultEditor(Object.class, null);
         table.setPreferredScrollableViewportSize(new Dimension(800, 400));
         JScrollPane scrollPane = new JScrollPane(table);

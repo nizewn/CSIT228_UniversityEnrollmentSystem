@@ -1,40 +1,51 @@
 package pages;
 
+import admin.*;
+
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ItemEvent;
 
 public class AdminPage extends JPanel {
     String[] tables = {"Users", "Courses", "Sections", "Enrollments", "Payments", "Announcements"};
-    private JComboBox<String> tableComboBox;
-    private JButton createButton;
-    private JButton updateButton;
-    private JButton deleteButton;
-    private JTable table;
+
+    private CardLayout cardLayout;
+    private JPanel adminPanel;
 
     public AdminPage() {
         super();
 
-        tableComboBox = new JComboBox<>(tables);
+        JPanel comboPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JLabel comboLabel = new JLabel("Table: ");
+        JComboBox<String> tableComboBox = new JComboBox<>(tables);
+        tableComboBox.addItemListener(l -> {
+            if (l.getStateChange() == ItemEvent.SELECTED) {
+                cardLayout.show(adminPanel, (String) l.getItem());
+            }
+        });
+        comboPanel.add(comboLabel);
+        comboPanel.add(tableComboBox);
 
-        createButton = new JButton("Create");
-        updateButton = new JButton("Update");
-        deleteButton = new JButton("Delete");
+        cardLayout = new CardLayout();
+        adminPanel = new JPanel(cardLayout);
 
-        // Create table
-        String[] columnNames = {"Column 1", "Column 2", "Column 3", "Column 4", "Column 5"};
-        DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
-        table = new JTable(tableModel);
+        // Add all admin panels
+        UsersAdmin usersAdmin = new UsersAdmin();
+        CoursesAdmin coursesAdmin = new CoursesAdmin();
+        SectionsAdmin sectionsAdmin = new SectionsAdmin();
+        EnrollmentsAdmin enrollmentsAdmin = new EnrollmentsAdmin();
+        PaymentsAdmin paymentsAdmin = new PaymentsAdmin();
+        AnnouncementsAdmin announcementsAdmin = new AnnouncementsAdmin();
 
-        // Set layout
+        adminPanel.add(usersAdmin, "Users");
+        adminPanel.add(coursesAdmin, "Courses");
+        adminPanel.add(sectionsAdmin, "Sections");
+        adminPanel.add(enrollmentsAdmin, "Enrollments");
+        adminPanel.add(paymentsAdmin, "Payments");
+        adminPanel.add(announcementsAdmin, "Announcements");
+
         setLayout(new BorderLayout());
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.add(createButton);
-        buttonPanel.add(updateButton);
-        buttonPanel.add(deleteButton);
-
-        add(tableComboBox, BorderLayout.NORTH);
-        add(buttonPanel, BorderLayout.CENTER);
-        add(new JScrollPane(table), BorderLayout.SOUTH);
+        add(comboPanel, BorderLayout.NORTH);
+        add(adminPanel, BorderLayout.CENTER);
     }
 }

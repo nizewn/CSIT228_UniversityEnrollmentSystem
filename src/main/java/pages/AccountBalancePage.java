@@ -26,7 +26,7 @@ public class AccountBalancePage extends JPanel implements UserEventListener {
         add(balanceInfoLabel, BorderLayout.NORTH);
 
         String[] columnNames = {"Date", "Amount", "Verified by", "Remaining balance"};
-        DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
+        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
         table.setPreferredScrollableViewportSize(new Dimension(500, 250));
         JScrollPane scrollPane = new JScrollPane(table);

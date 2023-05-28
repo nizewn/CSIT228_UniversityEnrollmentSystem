@@ -94,11 +94,12 @@ public class AnnouncementManager {
     }
 
     public boolean updateAnnouncement(int announcementId, String message) {
-        String sql = "UPDATE announcements SET message = ? WHERE announcementid = ?";
+        String sql = "UPDATE announcements SET message = ?, date = ? WHERE announcementid = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, message);
-            statement.setInt(2, announcementId);
+            statement.setDate(2, new java.sql.Date(new Date().getTime()));
+            statement.setInt(3, announcementId);
 
             int result = statement.executeUpdate();
 

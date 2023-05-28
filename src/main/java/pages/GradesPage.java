@@ -42,7 +42,7 @@ public class GradesPage extends JPanel implements UserEventListener {
 
         // Table
         String[] columnNames = {"Course #", "Description", "Instructor", "Midterm Grade", "Final Grade"};
-        DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
+        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.SOUTH);

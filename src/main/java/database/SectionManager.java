@@ -51,6 +51,32 @@ public class SectionManager {
         }
     }
 
+    public ArrayList<Section> getAllSections() {
+        String sql = "SELECT * FROM sections";
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(sql);
+            ArrayList<Section> sections = new ArrayList<>();
+
+            while (result.next()) {
+                CourseManager courseManager = new CourseManager();
+                sections.add(new Section(
+                        result.getInt("sectionid"),
+                        courseManager.getCourse(result.getInt("courseid")),
+                        result.getString("instructorname"),
+                        result.getString("location"),
+                        result.getString("days"),
+                        result.getTime("timestart"),
+                        result.getTime("timeend"),
+                        result.getInt("semester")));
+            }
+            return sections;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public ArrayList<Section> searchSectionByCourse(String query) {
         String sql = "SELECT * FROM sections WHERE courseid IN (SELECT courseid FROM courses WHERE description LIKE ? OR code LIKE ?)";
         try {

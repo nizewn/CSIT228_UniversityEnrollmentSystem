@@ -58,7 +58,7 @@ public class UserManager {
 
             ResultSet result = statement.executeQuery(sql);
 
-            ArrayList<User> userList = new ArrayList<User>();
+            ArrayList<User> userList = new ArrayList<>();
 
             while (result.next()) {
                 User user = new User(

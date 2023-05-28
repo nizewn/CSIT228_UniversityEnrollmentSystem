@@ -37,13 +37,13 @@ public class SchedulePage extends JPanel implements UserEventListener {
         labelPanel.add(semesterLabel);
 
         labelPanelWrapper.add(labelPanel, BorderLayout.NORTH);
-        labelPanelWrapper.setBorder(new EmptyBorder(10, 0, 0, 0));
+        labelPanelWrapper.setBorder(new EmptyBorder(20, 0, 0, 0));
         add(labelPanelWrapper, BorderLayout.NORTH);
 
         // Create the table panel and add the table to it
         JPanel tablePanel = new JPanel(new GridLayout(1, 1));
         String[] columnNames = {"Faculty", "Course & Section", "Description", "Schedule", "Room #"};
-        DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
+        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
         tablePanel.add(scrollPane);
