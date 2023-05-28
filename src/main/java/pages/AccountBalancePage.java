@@ -59,7 +59,7 @@ public class AccountBalancePage extends JPanel implements UserEventListener {
 
         add(scrollPane, BorderLayout.CENTER);
 
-        UserState.getInstance().addListener(this); // necessary ni para mogana ang onUserUpdate
+        UserState.getInstance().addUpdateListener(this); // necessary ni para mogana ang onUserUpdate
     }
 
     @Override

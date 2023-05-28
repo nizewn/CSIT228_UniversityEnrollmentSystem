@@ -53,7 +53,7 @@ public class StudentInfoPage extends JPanel implements UserEventListener {
         buttonPanel.setPreferredSize(new Dimension(500, getPreferredSize().height));
         add(buttonPanel);
 
-        UserState.getInstance().addListener(this); // necessary ni para mogana ang onUserUpdate
+        UserState.getInstance().addUpdateListener(this); // necessary ni para mogana ang onUserUpdate
     }
 
     @Override

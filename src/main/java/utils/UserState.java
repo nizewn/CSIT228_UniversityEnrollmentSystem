@@ -21,7 +21,7 @@ public class UserState {
         return instance;
     }
 
-    public void addListener(UserEventListener listener) {
+    public void addUpdateListener(UserEventListener listener) {
         listeners.add(listener);
     }
 

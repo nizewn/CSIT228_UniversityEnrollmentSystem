@@ -72,7 +72,7 @@ public class MainWindow extends JFrame implements ActionListener, UserEventListe
         add(sidebarPanel, BorderLayout.WEST);
         add(contentPanel, BorderLayout.CENTER);
 
-        UserState.getInstance().addListener(this);
+        UserState.getInstance().addUpdateListener(this);
     }
 
     private void initSidebar() {

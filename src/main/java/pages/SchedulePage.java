@@ -71,7 +71,7 @@ public class SchedulePage extends JPanel implements UserEventListener {
             refreshData();
         });
 
-        UserState.getInstance().addListener(this); // necessary ni para mogana ang onUserUpdate
+        UserState.getInstance().addUpdateListener(this); // necessary ni para mogana ang onUserUpdate
     }
 
     @Override

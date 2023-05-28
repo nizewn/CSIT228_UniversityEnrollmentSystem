@@ -36,7 +36,7 @@ public class GradesPage extends JPanel implements UserEventListener {
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.SOUTH);
 
-        UserState.getInstance().addListener(this);
+        UserState.getInstance().addUpdateListener(this);
     }
 
     @Override
