@@ -35,11 +35,6 @@ public class GradesPage extends JPanel implements UserEventListener {
         dropdownPanel.add(dropdown);
         add(dropdownPanel, BorderLayout.NORTH);
 
-        // Label
-        JLabel label = new JLabel("This is a label");
-        label.setHorizontalAlignment(SwingConstants.CENTER);
-        add(label, BorderLayout.CENTER);
-
         // Table
         String[] columnNames = {"Course #", "Description", "Instructor", "Midterm Grade", "Final Grade"};
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
@@ -80,12 +75,11 @@ public class GradesPage extends JPanel implements UserEventListener {
             double midtermGrade = enrollment.getMidtermGrade();
             double finalGrade = enrollment.getFinalGrade();
             String[] data = {
-                    enrollment.getSection().getCourse().getCode(),
-                    enrollment.getSection().getCourse().getDescription(),
-                    enrollment.getSection().getInstructorName(),
-                    midtermGrade <= 0.00 ? "" : String.valueOf(midtermGrade),
-                    finalGrade <= 0.00 ? "" : String.valueOf(finalGrade),
-            };
+                enrollment.getSection().getCourse().getCode(),
+                enrollment.getSection().getCourse().getDescription(),
+                enrollment.getSection().getInstructorName(),
+                midtermGrade <= 0.00 ? "" : String.valueOf(midtermGrade),
+                finalGrade <= 0.00 ? "" : String.valueOf(finalGrade),};
             tableModel.addRow(data);
         }
     }

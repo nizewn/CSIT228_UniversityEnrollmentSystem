@@ -22,7 +22,10 @@ public class DatabaseManager {
     private DatabaseManager() {
         System.out.println("Instantiating DatabaseManager singleton. this should only print once");
         try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/g2group1", "root", "");
+            String url = "jdbc:mysql://localhost:3306/g2group1";
+            String user = "root";
+            String password = "";
+            connection = DriverManager.getConnection(url, user, password);
         } catch (SQLException e) {
             e.printStackTrace();
         }
