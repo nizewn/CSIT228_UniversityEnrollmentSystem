@@ -20,7 +20,7 @@ public class HomePage extends JPanel {
 
         setBackground(Color.decode("#8c383e"));
 
-        ImageIcon imageIcon = new ImageIcon("");
+        ImageIcon imageIcon = new ImageIcon("ueslogo.jpg");
         imageLabel = new JLabel(imageIcon);
         constraints.gridx = 0;
         constraints.gridy = 0;
