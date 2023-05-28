@@ -70,6 +70,31 @@ public class EnrollmentManager {
         }
     }
 
+    public Enrollment getEnrollmentBySectionAndUser(int sectionId, int userId) {
+        String sql = "SELECT * FROM enrollments WHERE sectionid = ? AND userid = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setInt(1, sectionId);
+            statement.setInt(2, userId);
+            ResultSet result = statement.executeQuery();
+            if (result.next()) {
+                UserManager userManager = new UserManager();
+                SectionManager sectionManager = new SectionManager();
+                return new Enrollment(
+                        result.getInt("enrollmentid"),
+                        userManager.getUser(userId),
+                        sectionManager.getSection(sectionId),
+                        result.getDouble("midtermgrade"),
+                        result.getDouble("finalgrade"));
+            } else {
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public ArrayList<Enrollment> getAllEnrollmentsBySection(int sectionId) {
         String sql = "SELECT * FROM enrollments WHERE sectionid = ?";
         try {

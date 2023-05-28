@@ -1,5 +1,6 @@
 package pages;
 
+import database.UserManager;
 import entities.User;
 import utils.UserEventListener;
 import utils.UserState;
@@ -13,22 +14,11 @@ public class StudentInfoPage extends JPanel implements UserEventListener {
             firstNamePanel,
             emailPanel,
             usernamePanel,
-            yearlevelPanel;
+            passwordPanel;
 
-    // pag add lang ^
     public StudentInfoPage() {
         super();
         setLayout(new FlowLayout(FlowLayout.CENTER, 8, 10));
-
-        int separatorCount = 3;
-        JSeparator[] separators = new JSeparator[separatorCount];
-        for (int i = 0; i < separatorCount; i++) {
-            separators[i] = new JSeparator();
-            separators[i].setOrientation(SwingConstants.HORIZONTAL);
-            separators[i].setPreferredSize(new Dimension(650, 10));
-            separators[i].setForeground(new Color(200, 200, 200));
-            separators[i].setBackground(null);
-        }
 
         lastNamePanel = new FieldPanel("Last name");
         add(lastNamePanel);
@@ -36,22 +26,18 @@ public class StudentInfoPage extends JPanel implements UserEventListener {
         firstNamePanel = new FieldPanel("First name");
         add(firstNamePanel);
 
-        yearlevelPanel = new FieldPanel("Year Level");
-        add(yearlevelPanel);
-
         usernamePanel = new FieldPanel("Username");
         add(usernamePanel);
 
         emailPanel = new FieldPanel("Email");
         add(emailPanel);
 
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        passwordPanel = new FieldPanel("New password (optional)");
+        add(passwordPanel);
+
         JButton saveButton = new JButton("Save");
-        JButton refreshButton = new JButton("Refresh");
-        buttonPanel.add(saveButton);
-        buttonPanel.add(refreshButton);
-        buttonPanel.setPreferredSize(new Dimension(500, getPreferredSize().height));
-        add(buttonPanel);
+        add(saveButton);
+        saveButton.addActionListener(l -> saveInfo());
 
         UserState.getInstance().addUpdateListener(this); // necessary ni para mogana ang onUserUpdate
     }
@@ -64,7 +50,33 @@ public class StudentInfoPage extends JPanel implements UserEventListener {
     }
 
     void refreshData() {
-        // TODO: code diri para maupdate ang data sa text fields
+        User currentUser = UserState.getInstance().getCurrentUser();
+        lastNamePanel.setTextValue(currentUser.getLastName());
+        firstNamePanel.setTextValue(currentUser.getFirstName());
+        usernamePanel.setTextValue(currentUser.getUsername());
+        emailPanel.setTextValue(currentUser.getEmail());
+        passwordPanel.setTextValue("");
+    }
+
+    void saveInfo() {
+        User currentUser = UserState.getInstance().getCurrentUser();
+        UserManager userManager = new UserManager();
+        currentUser.setLastName(lastNamePanel.getTextValue());
+        currentUser.setFirstName(firstNamePanel.getTextValue());
+        currentUser.setUsername(usernamePanel.getTextValue());
+        currentUser.setEmail(emailPanel.getTextValue());
+
+        if (!passwordPanel.getTextValue().isEmpty()) {
+            userManager.updatePassword(currentUser.getId(), passwordPanel.getTextValue());
+        }
+        boolean success = userManager.updateUser(currentUser);
+        if (success) {
+            JOptionPane.showMessageDialog(this, "Successfully updated user info!");
+            UserState.getInstance().updateCurrentUser(currentUser);
+        } else {
+            JOptionPane.showMessageDialog(this, "Failed to update user info!");
+            refreshData();
+        }
     }
 }
 
@@ -76,7 +88,11 @@ class FieldPanel extends JPanel {
     public FieldPanel(String labelName) {
         super(new BorderLayout());
         label = new JLabel(labelName);
-        textField = new JTextField(50);
+        if (labelName.contains("password")) {
+            textField = new JPasswordField(50);
+        } else {
+            textField = new JTextField(50);
+        }
         add(label, BorderLayout.NORTH);
         add(textField, BorderLayout.SOUTH);
     }

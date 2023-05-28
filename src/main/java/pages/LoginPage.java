@@ -87,12 +87,13 @@ public class LoginPage extends JPanel implements ActionListener {
             User user = manager.loginUser(username, password);
 
             if (user != null) {
-                messageLabel.setForeground(Color.GREEN);
-                messageLabel.setText("Login successful!");
-
+                userTextField.setText("");
+                passwordField.setText("");
+                messageLabel.setText("");
                 UserState.getInstance().updateCurrentUser(user);
             } else {
                 messageLabel.setForeground(Color.RED);
+                passwordField.setText("");
                 messageLabel.setText("Invalid username or password");
             }
         } else if (e.getSource() == resetButton) {

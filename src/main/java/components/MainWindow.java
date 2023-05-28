@@ -24,7 +24,8 @@ public class MainWindow extends JFrame implements ActionListener, UserEventListe
             "Grades",
             "Calendar",
             "Announcements",
-            "Account Balance"
+            "Account Balance",
+            "Admin"
     };
     private JPanel sidebarPanel, contentPanel;
     private NavButton logoutButton;
@@ -56,6 +57,7 @@ public class MainWindow extends JFrame implements ActionListener, UserEventListe
         CalendarPage calendarPage = new CalendarPage();
         AnnouncementsPage announcementsPage = new AnnouncementsPage();
         AccountBalancePage accountBalancePage = new AccountBalancePage();
+        AdminPage adminPage = new AdminPage();
 
         contentPanel.add(homePage, "Home");
         contentPanel.add(loginPage, "Login");
@@ -67,6 +69,7 @@ public class MainWindow extends JFrame implements ActionListener, UserEventListe
         contentPanel.add(calendarPage, "Calendar");
         contentPanel.add(announcementsPage, "Announcements");
         contentPanel.add(accountBalancePage, "Account Balance");
+        contentPanel.add(adminPage, "Admin");
 
         initSidebar();
         add(sidebarPanel, BorderLayout.WEST);
@@ -135,24 +138,39 @@ public class MainWindow extends JFrame implements ActionListener, UserEventListe
         cardLayout.show(contentPanel, tabName);
     }
 
+    private String getActiveTab() {
+        for (NavButton btn : navButtons) {
+            if (btn.isActive()) {
+                return btn.getText();
+            }
+        }
+        return null;
+    }
+
     @Override
     public void onUserUpdate(User user) {
         // update sidebar
         for (NavButton b : navButtons) {
             if (b.getText().equals("Login") || b.getText().equals("Register") || b.getText().equals("Home")) {
                 b.setVisible(user == null);
+            } else if (b.getText().equals("Admin")) {
+                b.setVisible(user != null && user.isAdmin());
             } else {
-                b.setVisible(user != null);
+                b.setVisible(user != null && !user.isAdmin());
             }
         }
         logoutButton.setVisible(user != null);
-        // update top label
+
         if (user == null) {
             topLabel.setText("Welcome, guest!");
             switchTab("Home");
         } else {
             topLabel.setText("Welcome, " + user.getUsername() + "!");
-            switchTab("Schedule");
+            if (user.isAdmin()) {
+                switchTab("Admin");
+            } else if (getActiveTab() == null || !getActiveTab().equals("Courses")) {
+                switchTab("Schedule");
+            }
         }
     }
 }

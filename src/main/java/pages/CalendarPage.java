@@ -1,12 +1,24 @@
 package pages;
 
 import com.toedter.calendar.JCalendar;
+import database.EnrollmentManager;
+import entities.Enrollment;
+import entities.User;
+import utils.UserEventListener;
+import utils.UserState;
 
 import javax.swing.*;
-import javax.swing.plaf.PanelUI;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
-public class CalendarPage extends JPanel {
+public class CalendarPage extends JPanel implements UserEventListener {
+    ArrayList<Enrollment> enrollments;
+    JTable table;
 
     public CalendarPage() {
         super();
@@ -16,26 +28,28 @@ public class CalendarPage extends JPanel {
         // Create button panel
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JCalendar calendar = new JCalendar();
-        UIDefaults defaults = UIManager.getDefaults();
-        calendar.setUI((PanelUI) defaults.getUI(calendar));
+        calendar.setLocale(new Locale("en", "PH"));
+        calendar.setPreferredSize(new Dimension(300, 200));
         buttonPanel.add(calendar);
+        calendar.addPropertyChangeListener(p -> {
+            Calendar c = Calendar.getInstance();
+            c.setTime(calendar.getDate());
+
+            updateTable(c.get(Calendar.DAY_OF_WEEK));
+        });
+        calendar.getDayChooser().setAlwaysFireDayProperty(true);
 
         // Create label panel
         JPanel labelPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        JLabel dateLabel = new JLabel("Selected Date: ");
+        JLabel dateLabel = new JLabel();
         labelPanel.add(dateLabel);
 
         // Create table panel
         JPanel tablePanel = new JPanel(new BorderLayout());
-        String[] columnNames = {"Column 1", "Column 2", "Column 3", "Column 4", "Column 5"};
-        String[][] data = {
-                {"Row 1-1", "Row 1-2", "Row 1-3", "Row 1-4", "Row 1-5"},
-                {"Row 2-1", "Row 2-2", "Row 2-3", "Row 2-4", "Row 2-5"},
-                {"Row 3-1", "Row 3-2", "Row 3-3", "Row 3-4", "Row 3-5"},
-                {"Row 4-1", "Row 4-2", "Row 4-3", "Row 4-4", "Row 4-5"},
-                {"Row 5-1", "Row 5-2", "Row 5-3", "Row 5-4", "Row 5-5"}
-        };
-        JTable table = new JTable(data, columnNames);
+        String[] columnNames = {"Course & Section", "Description", "Time", "Location"};
+        DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
+        table = new JTable(tableModel);
+        table.setPreferredScrollableViewportSize(new Dimension(800, 320));
         JScrollPane scrollPane = new JScrollPane(table);
         tablePanel.add(scrollPane, BorderLayout.CENTER);
 
@@ -43,5 +57,53 @@ public class CalendarPage extends JPanel {
         add(buttonPanel, BorderLayout.NORTH);
         add(labelPanel, BorderLayout.CENTER);
         add(tablePanel, BorderLayout.SOUTH);
+
+        UserState.getInstance().addUpdateListener(this);
+    }
+
+    @Override
+    public void onUserUpdate(User user) {
+        if (user != null) {
+            refreshData();
+        }
+    }
+
+    void refreshData() {
+        int userId = UserState.getInstance().getCurrentUser().getId();
+        EnrollmentManager enrollmentManager = new EnrollmentManager();
+        enrollments = enrollmentManager.getAllEnrollmentsByUser(userId);
+    }
+
+    void updateTable(int dayOfWeek) {
+        if (enrollments == null) {
+            return;
+        }
+
+        DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+        tableModel.setRowCount(0);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
+
+        for (Enrollment enrollment : enrollments) {
+            if (dayOfWeek == Calendar.SUNDAY || dayOfWeek == Calendar.SATURDAY)
+                continue; // No classes on weekends, yehey
+            if ((dayOfWeek == Calendar.MONDAY || dayOfWeek == Calendar.WEDNESDAY || dayOfWeek == Calendar.FRIDAY) && !enrollment.getSection().getDays().equals("MWF"))
+                continue;
+            if ((dayOfWeek == Calendar.TUESDAY || dayOfWeek == Calendar.THURSDAY) && !enrollment.getSection().getDays().equals("TTH"))
+                continue;
+
+            LocalTime localTimeStart = enrollment.getSection().getTimeStart().toLocalTime();
+            LocalTime localTimeEnd = enrollment.getSection().getTimeEnd().toLocalTime();
+            String timeStart = localTimeStart.format(formatter);
+            String timeEnd = localTimeEnd.format(formatter);
+
+            String[] data = {
+                    enrollment.getSection().getCourse().getCode() + "-" + enrollment.getSection().getId(),
+                    enrollment.getSection().getCourse().getDescription(),
+                    timeStart + "-" + timeEnd,
+                    enrollment.getSection().getLocation()
+            };
+            tableModel.addRow(data);
+        }
     }
 }

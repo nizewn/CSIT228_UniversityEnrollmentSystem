@@ -4,6 +4,7 @@ import entities.Payment;
 import utils.DatabaseManager;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class PaymentManager {
@@ -69,23 +70,23 @@ public class PaymentManager {
         }
     }
 
-    public Payment getPaymentByUser(int userId) {
+    public ArrayList<Payment> getAllPaymentsByUser(int userId) {
         String sql = "SELECT * FROM payments WHERE userid = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, userId);
             ResultSet result = statement.executeQuery();
-            if (result.next()) {
-                UserManager userManager = new UserManager();
-                return new Payment(
+            ArrayList<Payment> payments = new ArrayList<>();
+            UserManager userManager = new UserManager();
+            while (result.next()) {
+                payments.add(new Payment(
                         result.getInt("paymentid"),
                         result.getInt("amount"),
                         result.getTimestamp("date"),
-                        userManager.getUser(userId),
-                        userManager.getUser(result.getInt("adminid")));
-            } else {
-                return null;
+                        userManager.getUser(result.getInt("userid")),
+                        userManager.getUser(result.getInt("adminid"))));
             }
+            return payments;
         } catch (SQLException e) {
             e.printStackTrace();
             return null;

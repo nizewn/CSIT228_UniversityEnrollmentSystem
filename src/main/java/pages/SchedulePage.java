@@ -10,8 +10,9 @@ import utils.UserState;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 import java.awt.*;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class SchedulePage extends JPanel implements UserEventListener {
@@ -41,35 +42,12 @@ public class SchedulePage extends JPanel implements UserEventListener {
 
         // Create the table panel and add the table to it
         JPanel tablePanel = new JPanel(new GridLayout(1, 1));
-        String[] columnNames = {"Faculty", "Course Code", "Description", "Section - Schedule - Room"};
+        String[] columnNames = {"Faculty", "Course & Section", "Description", "Schedule", "Room #"};
         DefaultTableModel tableModel = new DefaultTableModel(null, columnNames);
         table = new JTable(tableModel);
-        int tableWidth = table.getPreferredSize().width;
-        int numOfColumns = table.getColumnCount();
-        int columnWidth = tableWidth / numOfColumns;
-        TableColumn column;
-        for (int i = 0; i < numOfColumns; i++) {
-            column = table.getColumnModel().getColumn(i);
-            column.setPreferredWidth(columnWidth);
-            JPanel headerPanel = new JPanel(new GridLayout(2, 1));
-            headerPanel.add(new JLabel(columnNames[i]));
-            headerPanel.add(new JTextField());
-            column.setHeaderRenderer(new JPanelHeaderRenderer(headerPanel));
-        }
         JScrollPane scrollPane = new JScrollPane(table);
         tablePanel.add(scrollPane);
         add(tablePanel, BorderLayout.CENTER);
-
-        // Create the refresh button
-        JButton refreshButton = new JButton("Refresh");
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        buttonPanel.add(refreshButton);
-        add(buttonPanel, BorderLayout.SOUTH);
-
-        // Add an action listener for the refresh button
-        refreshButton.addActionListener(e -> {
-            refreshData();
-        });
 
         UserState.getInstance().addUpdateListener(this); // necessary ni para mogana ang onUserUpdate
     }
@@ -88,32 +66,28 @@ public class SchedulePage extends JPanel implements UserEventListener {
 
         DefaultTableModel model = (DefaultTableModel) table.getModel();
 
+        // iclear ang table / iremove ang old nga gidisplay
         model.setNumRows(0);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a");
+
         for (Enrollment e : enrollments) {
             Section section = e.getSection();
 
+            // format to HH:MM AM/PM using formatter above
+            LocalTime localTimeStart = section.getTimeStart().toLocalTime();
+            LocalTime localTimeEnd = section.getTimeEnd().toLocalTime();
+            String timeStart = localTimeStart.format(formatter);
+            String timeEnd = localTimeEnd.format(formatter);
+
             String[] data = {
                     section.getInstructorName(),
-                    section.getCourse().getCode(),
+                    section.getCourse().getCode() + "-" + section.getId(),
                     section.getCourse().getDescription(),
-                    section.getId() + " - " + section.getDays() + " - " + section.getLocation()
+                    section.getDays() + " " + timeStart + "-" + timeEnd,
+                    section.getLocation()
             };
             model.addRow(data);
-        }
-    }
-
-
-    private class JPanelHeaderRenderer implements javax.swing.table.TableCellRenderer {
-
-        private JPanel panel;
-
-        public JPanelHeaderRenderer(JPanel panel) {
-            this.panel = panel;
-        }
-
-        public java.awt.Component getTableCellRendererComponent(
-                javax.swing.JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            return panel;
         }
     }
 }
