@@ -45,6 +45,7 @@ public class CoursesAdmin extends JPanel {
         String[] columnNames = {"ID", "Code", "Units", "Description", "Tuition Fee"};
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
         table = new JTable(model);
+        table.setDefaultEditor(Object.class, null); // disable editing
 
         // Set layout
         setLayout(new BorderLayout());

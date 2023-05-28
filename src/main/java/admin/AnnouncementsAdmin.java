@@ -48,6 +48,7 @@ public class AnnouncementsAdmin extends JPanel {
         String[] columnNames = {"ID", "Message", "Updated on", "By"};
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
         table = new JTable(model);
+        table.setDefaultEditor(Object.class, null); // disable editing
 
         // Set layout
         setLayout(new BorderLayout());

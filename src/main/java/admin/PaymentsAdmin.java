@@ -68,6 +68,7 @@ public class PaymentsAdmin extends JPanel {
         String[] columnNames = {"ID", "Amount", "Date", "Last edited by"};
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
         table = new JTable(model);
+        table.setDefaultEditor(Object.class, null); // disable editing
 
         setLayout(new BorderLayout());
         add(userPanel, BorderLayout.NORTH);

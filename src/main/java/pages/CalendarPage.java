@@ -49,6 +49,7 @@ public class CalendarPage extends JPanel implements UserEventListener {
         String[] columnNames = {"Course & Section", "Description", "Time", "Location"};
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
+        table.setDefaultEditor(Object.class, null); // disable editing
         table.setPreferredScrollableViewportSize(new Dimension(800, 320));
         JScrollPane scrollPane = new JScrollPane(table);
         tablePanel.add(scrollPane, BorderLayout.CENTER);

@@ -44,6 +44,7 @@ public class GradesPage extends JPanel implements UserEventListener {
         String[] columnNames = {"Course #", "Description", "Instructor", "Midterm Grade", "Final Grade"};
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
+        table.setDefaultEditor(Object.class, null); // disable editing
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.SOUTH);
 

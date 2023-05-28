@@ -66,6 +66,7 @@ public class EnrollmentsAdmin extends JPanel {
         String[] columnNames = {"ID", "Student", "Midterm grade", "Final grade"};
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
         table = new JTable(model);
+        table.setDefaultEditor(Object.class, null); // disable editing
 
         setLayout(new BorderLayout());
         add(sectionPanel, BorderLayout.NORTH);

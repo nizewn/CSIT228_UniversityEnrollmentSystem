@@ -29,6 +29,7 @@ public class AccountBalancePage extends JPanel implements UserEventListener {
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
         table.setPreferredScrollableViewportSize(new Dimension(500, 250));
+        table.setDefaultEditor(Object.class, null); // disable editing
         JScrollPane scrollPane = new JScrollPane(table);
 
         add(scrollPane, BorderLayout.SOUTH);

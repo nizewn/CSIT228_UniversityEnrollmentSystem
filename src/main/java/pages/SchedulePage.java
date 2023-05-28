@@ -45,6 +45,7 @@ public class SchedulePage extends JPanel implements UserEventListener {
         String[] columnNames = {"Faculty", "Course & Section", "Description", "Schedule", "Room #"};
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         table = new JTable(tableModel);
+        table.setDefaultEditor(Object.class, null); // disable editing
         JScrollPane scrollPane = new JScrollPane(table);
         tablePanel.add(scrollPane);
         add(tablePanel, BorderLayout.CENTER);

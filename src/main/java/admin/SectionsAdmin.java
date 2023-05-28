@@ -69,6 +69,7 @@ public class SectionsAdmin extends JPanel {
         String[] columnNames = {"ID", "Instructor name", "Semester", "Location", "Schedule"};
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
         table = new JTable(model);
+        table.setDefaultEditor(Object.class, null); // disable editing
 
         setLayout(new BorderLayout());
         add(coursePanel, BorderLayout.NORTH);
